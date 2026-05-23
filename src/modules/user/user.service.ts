@@ -177,4 +177,32 @@ export class ProfileService {
     // Optionally filter out private profiles for non-friends? That's more complex; return basic info.
     return users;
   }
+
+  // ==================== USER LISTING ====================
+async getUsers(view: 'all' | 'new' | 'online', page: number = 1, limit: number = 20): Promise<{ users: Partial<User>[]; total: number }> {
+  const skip = (page - 1) * limit;
+  let queryBuilder = this.userRepo.createQueryBuilder('user')
+    .select(['user.id', 'user.username', 'user.pfp', 'user.status', 'user.date', 'user.lastactive'])
+    .where('user.is_active = :active', { active: true });
+
+  if (view === 'new') {
+    queryBuilder = queryBuilder.orderBy('user.date', 'DESC');
+  } else if (view === 'online') {
+    // Assuming you have an 'online_status' column. If not, fallback to 'lastactive' within last 5 min.
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+    queryBuilder = queryBuilder
+      .where('user.lastactive > :recent', { recent: fiveMinutesAgo })
+      .andWhere('user.is_active = :active', { active: true });
+  } else {
+    // 'all' – order by newest first
+    queryBuilder = queryBuilder.orderBy('user.date', 'DESC');
+  }
+
+  const [users, total] = await queryBuilder
+    .skip(skip)
+    .take(limit)
+    .getManyAndCount();
+
+  return { users, total };
+}
 }

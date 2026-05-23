@@ -15,6 +15,8 @@ const profileService = new ProfileService(
 const profileController = new ProfileController(profileService);
 
 // Public routes (anyone can view, but privacy applied inside service)
+router.get('/', profileController.getUsers);
+
 router.get('/:userId', profileController.getProfile);
 router.get('/search', profileController.searchUsers);
 router.get('/:userId/friends', profileController.getFriends);

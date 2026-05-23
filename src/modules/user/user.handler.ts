@@ -16,6 +16,17 @@ export class ProfileController {
       next(error);
     }
   };
+  getUsers = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const view = (req.query.view as 'all' | 'new' | 'online') || 'all';
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);
+      const result = await this.profileService.getUsers(view, page, limit);
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
 
   updateProfile = async (req: Request, res: Response, next: NextFunction) => {
     try {
