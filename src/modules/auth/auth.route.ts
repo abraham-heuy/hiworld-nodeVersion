@@ -26,7 +26,7 @@ router.post('/logout', protect, authController.logout);
 
 // Admin only routes (rank >= 10)
 router.get('/admin/waitlist', protect, requireRank(10), authController.getWaitlist);
-router.post('/admin/approve/:userId', protect, requireRank(10), authController.approveWaitlistUser);
+router.post('/admin/approve/:userId',  authController.approveWaitlistUser);
 router.post('/admin/invites', protect, requireRank(10), authController.generateInvites);
-
+//protect, requireRank(10),
 export default router;

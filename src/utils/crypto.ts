@@ -3,7 +3,7 @@ import crypto from 'crypto';
 const ALGORITHM = 'aes-256-gcm';
 const SECRET_KEY = process.env.MESSAGE_ENCRYPTION_KEY;
 
-if (!SECRET_KEY || SECRET_KEY.length !== 32) {
+if (!SECRET_KEY || SECRET_KEY.length !== 64) {
   throw new Error('MESSAGE_ENCRYPTION_KEY must be a 32-byte (64 hex chars) secret');
 }
 const KEY = Buffer.from(SECRET_KEY, 'hex');

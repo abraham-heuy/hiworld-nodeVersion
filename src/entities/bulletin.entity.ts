@@ -11,7 +11,7 @@ export class Bulletin {
   @Column({ length: 255 })
   author!: string;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   date!: Date;
 
   @Column({ length: 255 })

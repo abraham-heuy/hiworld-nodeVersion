@@ -70,7 +70,7 @@ export class ProfileService {
     if (dto.interests !== undefined) user.interests = JSON.stringify(dto.interests);
     if (dto.music !== undefined) user.music = dto.music;
     if (dto.pfp !== undefined) user.pfp = dto.pfp;
-    if (dto.css !== undefined) user.css = Buffer.from(dto.css);
+    if (dto.css !== undefined) user.css = dto.css;
     if (dto.status !== undefined) user.status = dto.status;
     if (dto.private !== undefined) user.private = dto.private;
 

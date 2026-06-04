@@ -20,9 +20,9 @@ export class ForumCategory {
   @Column({ default: false })
   isLocked!: boolean;
 
-  @CreateDateColumn({ type: 'datetime' })
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: 'datetime' })
+  @UpdateDateColumn({ type: 'timestamp' })
   updatedAt!: Date;
 }

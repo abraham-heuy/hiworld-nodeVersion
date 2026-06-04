@@ -21,7 +21,22 @@ export class AuthController {
     try {
       const dto: LoginDto = req.body;
       const { accessToken, refreshToken, user } = await this.authService.login(dto);
-      res.json({ accessToken, refreshToken, user });
+      
+      // Set httpOnly cookies
+      res.cookie('accessToken', accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 15 * 60 * 1000 // 15 minutes
+      });
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      });
+      
+      res.json({ user });
     } catch (error) {
       next(error);
     }
@@ -29,10 +44,27 @@ export class AuthController {
 
   refresh = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { refreshToken } = req.body;
+      const refreshToken = req.cookies.refreshToken;
       if (!refreshToken) throw new HttpException(400, 'Refresh token required');
       const tokens = await this.authService.refreshTokens(refreshToken);
-      res.json(tokens);
+      
+      // Set new access token cookie
+      res.cookie('accessToken', tokens.accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 15 * 60 * 1000
+      });
+      // If backend also returns a new refresh token (token rotation), update it
+      if (tokens.refreshToken) {
+        res.cookie('refreshToken', tokens.refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          maxAge: 7 * 24 * 60 * 60 * 1000
+        });
+      }
+      res.json({ message: 'Token refreshed' });
     } catch (error) {
       next(error);
     }
@@ -43,6 +75,9 @@ export class AuthController {
       const sessionId = req.sessionId; // set by protect middleware
       if (!sessionId) throw new HttpException(401, 'Not authenticated');
       await this.authService.logout(sessionId);
+      // Clear cookies
+      res.clearCookie('accessToken');
+      res.clearCookie('refreshToken');
       res.json({ message: 'Logged out successfully' });
     } catch (error) {
       next(error);
@@ -62,8 +97,8 @@ export class AuthController {
   approveWaitlistUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { userId } = req.params;
-    //   const adminId = req.authenticatedUser!.id;
-      await this.authService.approveWaitlistUser( userId);
+      // const adminId = req.authenticatedUser!.id;
+      await this.authService.approveWaitlistUser(userId);
       res.json({ message: 'User approved successfully' });
     } catch (error) {
       next(error);
@@ -85,7 +120,22 @@ export class AuthController {
     try {
       const dto: AdminLoginDto = req.body;
       const { accessToken, refreshToken, admin } = await this.authService.adminLogin(dto);
-      res.json({ accessToken, refreshToken, admin });
+      
+      // Set cookies for admin as well
+      res.cookie('accessToken', accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 15 * 60 * 1000
+      });
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000
+      });
+      
+      res.json({ admin });
     } catch (error) {
       next(error);
     }

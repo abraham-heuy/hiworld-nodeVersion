@@ -14,7 +14,7 @@ export class Group {
   @Column({ length: 255 })
   author!: string; // user ID
 
-  @CreateDateColumn({ type: 'datetime' })
+  @CreateDateColumn({ type: 'timestamp', nullable: true })
   date!: Date;
 
   @Column({ type: 'text' })

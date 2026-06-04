@@ -30,9 +30,9 @@ export class ForumPost {
   @Column({ default: 0 })
   votes!: number;
 
-  @CreateDateColumn({ type: 'datetime' })
+  @CreateDateColumn({ type: 'timestamp' })
   createdAt!: Date;
 
-  @UpdateDateColumn({ type: 'datetime' })
+  @UpdateDateColumn({ type: 'timestamp' })
   updatedAt!: Date;
 }

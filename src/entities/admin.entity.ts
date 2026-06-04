@@ -52,13 +52,13 @@ import {
     @Column({ default: 0 })
     failed_login_attempts!: number;
   
-    @Column({ type: 'datetime', nullable: true })
+    @Column({ type: 'timestamp', nullable: true })
     last_failed_attempt?: Date | null;
   
-    @Column({ type: 'datetime', nullable: true })
+    @Column({ type: 'timestamp', nullable: true })
     last_login?: Date | null;
   
-    @Column({ type: 'datetime', nullable: true })
+    @Column({ type: 'timestamp', nullable: true })
     last_logout?: Date | null;
   
     // IP address logging (last known)
@@ -73,9 +73,9 @@ import {
     @Column({ nullable: true })
     current_session_token?: string;
   
-    @CreateDateColumn({ type: 'datetime' })
+    @CreateDateColumn({ type: 'timestamp' })
     created_at!: Date;
   
-    @UpdateDateColumn({ type: 'datetime' })
+    @UpdateDateColumn({ type: 'timestamp' })
     updated_at!: Date;
   }

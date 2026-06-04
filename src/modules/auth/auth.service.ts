@@ -10,10 +10,10 @@ import {
 import { BadRequestException, UnauthorizedException, ConflictException, NotFoundException } from '../../exceptions/HttpExceptions';
 import { AdminLoginDto } from '../../dtos/admin.dto';
 import { SignupDto, LoginDto } from '../../dtos/other.dto';
-import { Invite } from '../../entities/invite.entity';
 import { Session } from '../../entities/session.entity';
 import { User } from '../../entities/user.entity';
 import { Admin } from '../../entities/admin.entity';
+import { Invite } from '../../entities/invite.entity';
 
 export class AuthService {
   constructor(

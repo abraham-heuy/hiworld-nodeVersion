@@ -2,14 +2,15 @@ import 'reflect-metadata';
 import 'dotenv/config';
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import { createServer } from 'http';               // 👈 new
-import { Server as SocketServer } from 'socket.io'; // 👈 new
+import { createServer } from 'http';               
+import { Server as SocketServer } from 'socket.io'; 
 import { AppDataSource } from './database/data-source';
 import { registerRoutes } from './index.routes';
 import path from 'path';
+import cookieParser from 'cookie-parser';
 
 const app: Express = express();
-const httpServer = createServer(app);              // 👈 create HTTP server
+const httpServer = createServer(app);              
 const PORT = process.env.PORT || 8080;
 
 // Middleware
@@ -19,6 +20,8 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
 
 // Health check endpoint
 app.get('/api/health', (_req: Request, res: Response) => {

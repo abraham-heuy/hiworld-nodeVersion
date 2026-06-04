@@ -10,7 +10,7 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_PASSWORD || 'postgres',
   database: process.env.DB_NAME || 'hiworld_db',
   synchronize: process.env.NODE_ENV !== 'production',
-  logging: process.env.NODE_ENV === 'development',
+  logging: false,
   entities: [path.join(__dirname, '../entities/*.ts')],
   migrations: [path.join(__dirname, './migrations/*.ts')],
   subscribers: [path.join(__dirname, '../subscribers/*.ts')],

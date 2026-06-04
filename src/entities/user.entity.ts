@@ -18,13 +18,13 @@ export class User {
   @Column({ length: 255 })
   password!: string;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   date!: Date;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   lastactive!: Date;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   lastlogon!: Date;
 
   @Column({ length: 500, default: '' })
@@ -33,8 +33,9 @@ export class User {
   @Column({ length: 500, default: ' ' })
   interests!: string;
 
-  @Column({ type: 'blob', nullable: true })
-  css?: Buffer | null;
+  // PostgreSQL uses 'bytea' for binary data; but if CSS is text, use 'text'
+  @Column({ type: 'text', nullable: true })
+  css?: string | null;
 
   @Column({ length: 255, default: 'default.mp3' })
   music!: string;
@@ -54,14 +55,14 @@ export class User {
   @Column({ default: 0 })
   views!: number;
 
-  // ========== WAITLIST / INVITE FIELDS ==========
+  // Waitlist / Invite fields
   @Column({ default: false })
-  is_active!: boolean;        // can they log in?
+  is_active!: boolean;
 
   @Column({ default: false })
-  is_waitlisted!: boolean;    // signed up without invite
+  is_waitlisted!: boolean;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   waitlisted_at?: Date | null;
 
   @Column({ type: 'int', nullable: true })
@@ -70,10 +71,10 @@ export class User {
   @Column({ nullable: true })
   used_invite_id?: string | null;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   activated_at?: Date | null;
 
-  // ========== RELATIONS ==========
+  // Relations
   @ManyToOne(() => Invite, { nullable: true })
   @JoinColumn({ name: 'used_invite_id' })
   used_invite?: Invite;

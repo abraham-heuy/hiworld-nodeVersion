@@ -8,18 +8,18 @@ export class Session {
   @Column({ name: 'session_id', length: 16 })
   sessionId!: string;
 
-  @Column({ name: 'user_id' })
+  @Column({ name: 'user_id', type: 'uuid' })
   userId!: string;
 
   @Column({ length: 50 })
   user!: string;
 
-  @CreateDateColumn({ name: 'last_logon', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ name: 'last_logon', type: 'timestamp' })
   lastLogon!: Date;
 
-  @Column({ name: 'last_activity', type: 'timestamp', default: () => '0000-00-00 00:00:00' })
+  @Column({ name: 'last_activity', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   lastActivity!: Date;
 
-  @Column({ default: false })
+  @Column({ default: true })
   active!: boolean;
 }

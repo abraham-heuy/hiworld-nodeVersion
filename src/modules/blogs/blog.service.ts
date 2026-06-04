@@ -43,11 +43,10 @@ export class BlogService {
   async getBlogs(viewerId: string | undefined, query: GetBlogsQueryDto): Promise<{ blogs: Blog[]; total: number }> {
     const { page = 1, limit = 20, categoryId, authorId, sort = 'date' } = query;
     const skip = (page - 1) * limit;
-
+  
     let friendIds: string[] = [];
-
+  
     if (viewerId) {
-      // Get friend ids of viewer
       const friendships = await this.friendRepo.find({
         where: [
           { sender: viewerId, status: 'ACCEPTED' },
@@ -59,38 +58,32 @@ export class BlogService {
         if (f.sender === viewerId) friendUsernames.push(f.receiver);
         else friendUsernames.push(f.sender);
       }
-      // Get actual friend user IDs from usernames
       const friendUsers = await this.userRepo.find({ where: { username: In(friendUsernames) } });
       friendIds = friendUsers.map(u => u.id);
     }
-
+  
     const blogQuery = this.blogRepo.createQueryBuilder('blog')
-      .leftJoin('blog.author', 'author') // if author is stored as username, adjust
-      .where('blog.privacyLevel = 0'); // public always
-
+      .where('blog.privacyLevel = 0');
+  
     if (viewerId) {
-      // add own blogs
       blogQuery.orWhere('blog.author = :viewerId', { viewerId });
-      // add friends-only blogs from friends
       if (friendIds.length) {
         blogQuery.orWhere('(blog.privacyLevel = 1 AND blog.author IN (:...friendIds))', { friendIds });
       }
     }
-
+  
     if (categoryId) {
       blogQuery.andWhere('blog.category = :categoryId', { categoryId });
     }
     if (authorId) {
       blogQuery.andWhere('blog.author = :authorId', { authorId });
     }
-
-    // const order = sort === 'kudos' ? { kudos: 'DESC' } : { date: 'DESC' };
+  
     blogQuery.orderBy(`blog.${sort}`, 'DESC').skip(skip).take(limit);
-
+  
     const [blogs, total] = await blogQuery.getManyAndCount();
     return { blogs, total };
   }
-
   async getBlogById(blogId: string, viewerId?: string): Promise<Blog> {
     const blog = await this.blogRepo.findOne({ where: { id: blogId } });
     if (!blog) throw new NotFoundException('Blog not found');

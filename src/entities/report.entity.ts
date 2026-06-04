@@ -11,7 +11,7 @@ export class Report {
   @Column({ name: 'creator_id', type: 'uuid' })
   creatorId!: string; // user being reported (or the author of content)
 
-  @CreateDateColumn({ type: 'datetime' })
+  @CreateDateColumn({ type: 'timestamp' })
   date!: Date;
 
   @Column({ name: 'content_type' })

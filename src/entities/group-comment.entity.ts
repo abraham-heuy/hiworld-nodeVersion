@@ -19,6 +19,6 @@ export class GroupComment {
   @Column({ length: 500 })
   text!: string;
 
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   date!: Date;
 }

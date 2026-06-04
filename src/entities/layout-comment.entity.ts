@@ -14,6 +14,6 @@ export class LayoutComment {
   @Column({ length: 500 })
   text!: string;
 
-  @CreateDateColumn({ type: 'datetime' })
+  @CreateDateColumn({ type: 'timestamp' })
   date!: Date;
 }
